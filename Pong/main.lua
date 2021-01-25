@@ -233,10 +233,16 @@ function love.update(dt)
             end
         end
         
-        -- function to move player 2
+        -- function to move player2 (ai paddle)
         moveAiPaddle()
 
+    elseif gameState == 'done' then
+        -- resets ai paddle´s velocity y if has a value that is not 0
+        if player2.dy ~= 0 then
+            player2.dy = 0
+        end
     end
+
 
     --
     -- paddles can move no matter what state we're in
@@ -384,17 +390,17 @@ function displaySides()
         love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 32, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
     else
         if winningPlayer == 1 then
-            love.graphics.setColor(0, 1, 0, 1)
+            love.graphics.setColor(0, 1, 0, 1) -- changes the current color to green to indicates who is the winner
             love.graphics.print('YOU', VIRTUAL_WIDTH / 2 - 43, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the player´s side
-            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.setColor(1, 0, 0, 1) -- changes the current color to red to indicates who is the loser
             love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 32, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
         else
-            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.setColor(1, 0, 0, 1) -- changes the current color to red to indicates who is the loser
             love.graphics.print('YOU', VIRTUAL_WIDTH / 2 - 49, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the player´s side
-            love.graphics.setColor(0, 1, 0, 1)
+            love.graphics.setColor(0, 1, 0, 1) -- changes the current color to green to indicates who is the winner
             love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 38, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
         end
-        love.graphics.setColor(1, 1, 1, 1) -- changes the current color to the default color
+        love.graphics.setColor(1, 1, 1, 1) -- changes the current color to default color
     end
 end
 
@@ -403,13 +409,13 @@ end
 ]]
 function moveAiPaddle()
     moveChance = math.random(0, 100) -- a random number with the prupose of verify if we can move the paddle in this frame
-    if moveChance <= 80 then -- verifies the randomed value
-        if ball.y  + ball.height / 2 > player2.y + player2.height / 2 then
-            player2.dy = PADDLE_SPEED -- sets the ai paddle´s velocity y to positive if ball´s y center point is greater than ai paddle´s y center point
-        elseif ball.y + ball.height / 2 < player2.y + player2.height / 2 then
-            player2.dy = -PADDLE_SPEED -- sets the ai paddle´s velocity y to negative if ball´s y center point is lesser than ai paddle´s y center point
+    if moveChance <= 65 then -- verifies the randomed value
+        if ball.y  + ball.height / 2 > player2.y + player2.height then
+            player2.dy = PADDLE_SPEED -- sets the ai paddle´s velocity y to positive if ball´s y center point is greater than ai paddle´s y bottom point
+        elseif ball.y + ball.height / 2 < player2.y then
+            player2.dy = -PADDLE_SPEED -- sets the ai paddle´s velocity y to negative if ball´s y center point is lesser than ai paddle´s y top point
         else
-           player2.dy = 0
+            player2.dy = 0
         end
     else
         player2.dy = 0 -- sets the ai paddle´s velocity y to 0 if the randomed value is not lesser or equal to the compared value
