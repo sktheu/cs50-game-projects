@@ -91,7 +91,7 @@ function love.load()
     -- initialize our player paddles; make them global so that they can be
     -- detected by other functions and modules
     player1 = Paddle(10, 30, 5, 20)
-    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
+    player2 = Paddle(VIRTUAL_WIDTH - 15, VIRTUAL_HEIGHT - 30, 5, 20)
 
     -- place a ball in the middle of the screen
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
@@ -143,6 +143,11 @@ function love.update(dt)
             ball.dx = math.random(140, 200)
         else
             ball.dx = -math.random(140, 200)
+        end
+        
+        -- resets ai paddle´s velocity y if has a value that is not 0
+        if player2.dy ~= 0 then
+            player2.dy = 0
         end
     elseif gameState == 'play' then
         -- detect ball collision with paddles, reversing dx if true and
@@ -374,22 +379,37 @@ end
 ]]
 function displaySides()
     love.graphics.setFont(smallFont) -- changes the current font to smallFont
-    love.graphics.print('YOU', VIRTUAL_WIDTH / 2 - 49, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the player´s side
-    love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 31, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
+    if gameState ~= 'done' then
+        love.graphics.print('YOU', VIRTUAL_WIDTH / 2 - 49, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the player´s side
+        love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 32, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
+    else
+        if winningPlayer == 1 then
+            love.graphics.setColor(0, 1, 0, 1)
+            love.graphics.print('YOU', VIRTUAL_WIDTH / 2 - 43, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the player´s side
+            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 32, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
+        else
+            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.print('YOU', VIRTUAL_WIDTH / 2 - 49, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the player´s side
+            love.graphics.setColor(0, 1, 0, 1)
+            love.graphics.print('BOT', VIRTUAL_WIDTH / 2 + 38, VIRTUAL_HEIGHT / 3 + 45) -- renders the text that indicated the bot´s side
+        end
+        love.graphics.setColor(1, 1, 1, 1) -- changes the current color to the default color
+    end
 end
 
 --[[
-    Moves the ai paddle on Y axis relative to ball´s y axis.
+    Change ai paddle´s velocity y relative to ball´s y position.
 ]]
 function moveAiPaddle()
     moveChance = math.random(0, 100) -- a random number with the prupose of verify if we can move the paddle in this frame
-    if moveChance <= 60 then -- verifies the randomed value
-        if ball.y > player2.y then
-            player2.dy = PADDLE_SPEED
-        elseif ball.y < player2.y then
-            player2.dy = -PADDLE_SPEED
+    if moveChance <= 80 then -- verifies the randomed value
+        if ball.y  + ball.height / 2 > player2.y + player2.height / 2 then
+            player2.dy = PADDLE_SPEED -- sets the ai paddle´s velocity y to positive if ball´s y center point is greater than ai paddle´s y center point
+        elseif ball.y + ball.height / 2 < player2.y + player2.height / 2 then
+            player2.dy = -PADDLE_SPEED -- sets the ai paddle´s velocity y to negative if ball´s y center point is lesser than ai paddle´s y center point
         else
-            player2.dy = 0
+           player2.dy = 0
         end
     else
         player2.dy = 0 -- sets the ai paddle´s velocity y to 0 if the randomed value is not lesser or equal to the compared value
