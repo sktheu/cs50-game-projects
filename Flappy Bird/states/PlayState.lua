@@ -43,6 +43,7 @@ function PlayState:update(dt)
     if gPaused == false then -- if is not paused
         if love.keyboard.wasPressed('p') then
             gPaused = true -- sets is paused
+            gSounds['pause']:play() -- play pause sound
             lastMusicTime = gSounds['music']:tell() -- stores the last duration time
             gSounds['music']:stop() -- stop the music
         end
@@ -121,6 +122,7 @@ function PlayState:update(dt)
     else -- if is paused
         if love.keyboard.wasPressed('p') then
             gPaused = false -- sets is not paused
+            gSounds['resume']:play() -- play resume sound
             gSounds['music']:setLooping(true) -- sets the music to looping again
             gSounds['music']:play() -- play the music again
             gSounds['music']:seek(lastMusicTime) -- sets the current music duration time to the last duration time
