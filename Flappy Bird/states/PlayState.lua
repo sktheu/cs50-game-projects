@@ -21,7 +21,7 @@ BIRD_HEIGHT = 24
 MIN_COUNT = 2
 MAX_COUNT = 5
 
--- stores the last duration of the music before the game has been paused
+-- stores the last duration time of the music before the game has been paused
 lastMusicTime = 0
 
 function PlayState:init()
@@ -43,7 +43,7 @@ function PlayState:update(dt)
     if gPaused == false then -- if is not paused
         if love.keyboard.wasPressed('p') then
             gPaused = true -- sets is paused
-            lastMusicTime = gSounds['music']:tell() -- stores the last duration
+            lastMusicTime = gSounds['music']:tell() -- stores the last duration time
             gSounds['music']:stop() -- stop the music
         end
         -- update timer for pipe spawning
@@ -123,7 +123,7 @@ function PlayState:update(dt)
             gPaused = false -- sets is not paused
             gSounds['music']:setLooping(true) -- sets the music to looping again
             gSounds['music']:play() -- play the music again
-            gSounds['music']:seek(lastMusicTime) -- sets the current music duration to the last duration
+            gSounds['music']:seek(lastMusicTime) -- sets the current music duration time to the last duration time
         end
     end
 end
@@ -140,7 +140,7 @@ function PlayState:render()
 
     if gPaused then -- if is paused
         love.graphics.setFont(flappyFont)
-        love.graphics.printf('PAUSED',  0, 100, VIRTUAL_WIDTH, 'center') -- renders a text indicating the game is paused
+        love.graphics.printf('PAUSED',  0, 100, VIRTUAL_WIDTH, 'center') -- renders a text to indicate that game is paused
         love.graphics.setFont(mediumFont)
         love.graphics.printf('press "p" to resume', 0, 140, VIRTUAL_WIDTH, 'center') -- renders a text to show the input for resume
     end

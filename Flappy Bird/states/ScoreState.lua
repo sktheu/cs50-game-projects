@@ -17,7 +17,7 @@ ScoreState = Class{__includes = BaseState}
 function ScoreState:enter(params)
     self.score = params.score
 
-    self.medal = ScoreState:SetMedalSprite(self.score) -- Allocating the returned sprite in medal
+    self.medal = ScoreState:SetMedalSprite(self.score) -- allocate the returned sprite in medal
 end
 
 function ScoreState:update(dt)
